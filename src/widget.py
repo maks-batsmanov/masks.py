@@ -44,7 +44,3 @@ def get_date(date: str) -> str:
         return "Неверный формат даты"
     dates = re.findall(r"\d{4}-\d{2}-\d{2}", date)
     return f"{dates[0][8:]}.{dates[0][5:7]}.{dates[0][0:4]}"
-
-
-if __name__ == "__main__":
-    print(get_date("hjkf-ij-uyTiu:ws:1wg.671407"))
