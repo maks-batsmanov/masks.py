@@ -3,11 +3,21 @@ import pytest
 from src.widget import mask_account_card
 from src.widget import get_date
 
+def test_mask_account_card_01(number_of_card_01):
+    assert mask_account_card(number_of_card_01) == 'Visa Platinum 7000 79** **** 6361'
+
+def test_mask_account_card_02(number_of_card_02):
+    assert mask_account_card(number_of_card_02) == 'Maestro 7000 79** **** 6361'
+
+def test_mask_account_card_03(number_of_account):
+    assert mask_account_card(number_of_account) == 'Счет **4305'
+
+
+def test_mask_account_card_04():
+    assert mask_account_card('Счет asdf1658498765489752') == "Неверный формат ввода"
+
 
 @pytest.mark.parametrize('value, expected', [
-    ('Visa Platinum 7000792289606361','Visa Platinum 7000 79** **** 6361'),
-    ('Счет 73654108430135874305', 'Счет **4305'),
-    ('Maestro 7000792289606361', 'Maestro 7000 79** **** 6361'),
     ('Счет1658498765489752', 'Неверный формат ввода'),
     ('Visa Platinum7000792289606361', 'Неверный формат ввода'),
     ('сче 70007922896063617890', 'Неверный формат ввода'),
