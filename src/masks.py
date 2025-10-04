@@ -1,4 +1,3 @@
-import pytest
 
 def get_mask_card_number(number_of_card: str) -> str:
     """Функция, принимает строку с номером карты и возвращает ее маску"""

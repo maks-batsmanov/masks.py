@@ -1,7 +1,9 @@
 
 import re
+from typing import Any
 
-def filter_by_state(list_of_dict: list[dict], state: str = 'EXECUTED') -> list[dict]:
+
+def filter_by_state(list_of_dict: list[dict], state: str = 'EXECUTED') -> Any:
     """Функция принимает список словарей и возвращает новый список,
     содержащий только те словари, у которых ключ state
     соответствует указанному значению."""
@@ -17,10 +19,7 @@ def filter_by_state(list_of_dict: list[dict], state: str = 'EXECUTED') -> list[d
     return new_list_of_dict
 
 
-
-
-
-def sort_by_date(list_of_dict: list[dict], direction: bool = True) -> list[dict]:
+def sort_by_date(list_of_dict: list[dict], direction: bool = True) -> Any:
     """Функция, которая принимает список словарей,
     и возвращает новый список, отсортированный по дате"""
     pattern = r"^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])T([01]\d|2[0-3]):([0-5]\d):([0-5]\d)\.\d+$"
@@ -31,6 +30,3 @@ def sort_by_date(list_of_dict: list[dict], direction: bool = True) -> list[dict]
             return 'Неверный формат даты'
     list_sorted_by_date = sorted(list_of_dict, key=lambda x: x['date'] , reverse=direction)
     return list_sorted_by_date
-
-# if __name__ == '__main__':
-#     print(sort_by_date(abc))
