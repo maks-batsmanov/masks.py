@@ -25,3 +25,16 @@ def list_of_dict_incorrect():
         {'id': 41428829, 'state': 'EXECUTED', 'date': '2019-07-03'},
         {'id': 939719570, 'state': 'EXECUTED', 'date': '2019-02-07'},
         ]
+
+@pytest.fixture
+def number_of_card_01():
+    return 'Visa Platinum 7000792289606361'
+
+@pytest.fixture
+def number_of_card_02():
+    return 'Maestro 7000792289606361'
+
+@pytest.fixture
+def number_of_account():
+    return 'Счет 73654108430135874305'
+
