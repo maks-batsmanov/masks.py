@@ -25,5 +25,3 @@ def get_mask_account(number_of_account: str) -> str:
     digits_list = [int(d) for d in str(number_of_account)]
     last_block = "".join(map(str, digits_list[-4:]))
     return f"**{last_block}"
-
-print(get_mask_account('123456781(345678127643'))
