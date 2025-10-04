@@ -46,4 +46,3 @@ def test_sort_by_date_03(list_of_dict_same_date):
 
 def test_sort_by_date_04(list_of_dict_incorrect):
     assert sort_by_date(list_of_dict_incorrect) == 'Неверный формат даты'
-
