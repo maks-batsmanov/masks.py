@@ -1,7 +1,6 @@
 import pytest
 
-from src.widget import mask_account_card
-from src.widget import get_date
+from src.widget import get_date, mask_account_card
 
 
 def test_mask_account_card_01(number_of_card_01: str) -> None:
