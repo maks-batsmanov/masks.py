@@ -1,6 +1,5 @@
 import pytest
 from unittest.mock import patch
-
 from src.utils import get_transaction_data
 
 
@@ -42,3 +41,12 @@ def test_get_transaction_data_01():
 def test_get_transaction_data(value, expected):
     assert get_transaction_data(value) == expected
 
+
+def test_file_not_exists():
+    with patch('os.path.exists') as mock_exists:
+        mock_exists.return_value = False
+
+        result = get_transaction_data('fake_path.json')
+
+        assert result == []
+        mock_exists.assert_called_once()
