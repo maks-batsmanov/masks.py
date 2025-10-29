@@ -20,18 +20,20 @@ def get_transaction_data(path_to_file: str) -> list:
     """Функция принимает путь к json-файлу, и возвращает список словарей с данными о транзакциях
     Если файл пустой, содержит не список или не найден, функция возвращает пустой список"""
 
-    normalized_path = os.path.normpath(path_to_file)
     logger.info(f'Начало работы функции. Входные данные: {path_to_file}')
+    normalized_path = os.path.normpath(path_to_file)
+
     if not os.path.exists(normalized_path):
-        logger.warning('Ошибка, файл не найден')
+        logger.error('Ошибка, файл не найден')
         return []
     if os.path.getsize(normalized_path) == 0:
-        logger.warning('Ошибка, файл пустой')
+        logger.error('Ошибка, файл пустой')
         return []
+    logger.info('Открываем и преобразуем файл в список словарей')
     with open(normalized_path, "r", encoding="utf-8") as file:
         content = json.load(file)
     if not isinstance(content, list):
-        logger.warning('Ошибка, файл не является списком')
+        logger.error('Ошибка, файл не является списком')
         return []
     logger.info('Работа завершена успешно')
     return content
