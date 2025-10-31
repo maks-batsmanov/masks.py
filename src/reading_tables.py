@@ -18,8 +18,6 @@ def read_csv(path_to_csv):
     except Exception as ex:
         return f'Ошибка: {ex}'
 
-# print(working_with_csv('D:\\SkyPro_files\\mini_transact.csv'))
-
 
 def read_excel(path_to_excel):
     """Функция принимает на вход путь до excel-файла и возвращает список словарей с транзакциями"""
@@ -31,5 +29,3 @@ def read_excel(path_to_excel):
 
     except Exception as ex:
         return f'Ошибка: {ex}'
-
-# print(working_with_excel("D:\\SkyPro_files\\transactions_excel.xlsx"))
