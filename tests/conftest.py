@@ -92,4 +92,22 @@ def transactions_fixture():
             "from": "Visa Platinum 1246377376343588",
             "to": "Счет 14211924144426031657",
         },
+        {
+            "id": 594456027,
+            "state": "CANCELED",
+            "date": "2018-03-12T21:27:25.241689",
+            "operationAmount": {"amount": "67223.70", "currency": {"name": "руб.", "code": "RUB"}},
+            "description": "Перевод с карты на карту",
+            "from": "Visa Platinum 1246377376343588",
+            "to": "Счет 14211924144426031657",
+        },
+        {
+            "id": 937764268,
+            "state": "EXECUTED",
+            "date": "2017-09-04T23:15:05.206878",
+            "operationAmount": {"amount": "79114.93", "currency": {"name": "USD", "code": "USD"}},
+            "description": "Перевод со счета на счет",
+            "from": "Счет 19708645243227258542",
+            "to": "Счет 75651667383060284188",
+        }
     ]
