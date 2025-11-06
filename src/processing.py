@@ -1,32 +1,32 @@
 
-import re
-from typing import Any
-
-
-def filter_by_state(list_of_dict: list[dict], state: str = 'EXECUTED') -> Any:
+def filter_by_state(list_of_dict: list[dict], state: str = 'EXECUTED') -> list:
     """Функция принимает список словарей и возвращает новый список,
     содержащий только те словари, у которых ключ state
     соответствует указанному значению."""
 
     new_list_of_dict = []
 
-    valid_states = ['EXECUTED', 'CANCELED']
+    valid_states = ['EXECUTED', 'CANCELED', 'PENDING']
     if state not in valid_states:
-        return 'Такого ключа нет'
+        print('Такого ключа нет')
+        return []
     for dictionary in list_of_dict:
         if dictionary['state'] == state:
             new_list_of_dict.append(dictionary)
     return new_list_of_dict
 
 
-def sort_by_date(list_of_dict: list[dict], direction: bool = True) -> Any:
+def sort_by_date(list_of_dict: list[dict], direction: bool = True) -> list:
     """Функция, которая принимает список словарей,
-    и возвращает новый список, отсортированный по дате"""
-    pattern = r"^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])T([01]\d|2[0-3]):([0-5]\d):([0-5]\d)\.\d+$"
-    if type(list_of_dict) is not list:
-        return 'Неверный тип данных'
-    for dict_ in list_of_dict:
-        if bool(re.match(pattern, dict_['date'])) is False:
-            return 'Неверный формат даты'
-    list_sorted_by_date = sorted(list_of_dict, key=lambda x: x['date'] , reverse=direction)
-    return list_sorted_by_date
+    и возвращает новый список, отсортированный по дате
+    По умолчанию сортирует по убыванию"""
+
+    if not list_of_dict:
+        return []
+
+    valid_transactions = [t for t in list_of_dict if t.get('date')]
+
+    try:
+        return sorted(valid_transactions, key=lambda x: x['date'], reverse=direction)
+    except Exception:
+        return list_of_dict
