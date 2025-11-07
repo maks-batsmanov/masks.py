@@ -1,20 +1,19 @@
-from src.reading_tables import read_csv, read_excel
-from src.utils import get_transaction_data
-from src.processing import filter_by_state
-from src.processing import sort_by_date
 from src.generators import filter_by_currency
+from src.processing import filter_by_state, sort_by_date
+from src.reading_tables import read_csv, read_excel
 from src.transaction_analyzer import process_bank_search
+from src.utils import get_transaction_data
 
 
-def main():
-    """Функция получает информацию от пользователя и связывает все функциональности"""
+def main_start():
+    """Функция предлагает меню для выбора типа исходного файла"""
 
-    print("""Программа: Привет! Добро пожаловать в программу работы 
+    print("""Программа: Привет! Добро пожаловать в программу работы
         с банковскими транзакциями. Выберите необходимый пункт меню:
-        
         1. Получить информацию о транзакциях из JSON-файла
         2. Получить информацию о транзакциях из CSV-файла
-        3. Получить информацию о транзакциях из XLSX-файла""")
+        3. Получить информацию о транзакциях из XLSX-файла
+        4. Завершить работу""")
 
     while True:
         print()
@@ -24,167 +23,193 @@ def main():
             print('Для обработки выбран JSON-файл')
             json_path = input('Введите путь к JSON-файлу: ')
             json_path = json_path.strip('"\'')
-            res = get_transaction_data(json_path)
-            break
+            result = get_transaction_data(json_path)
+            if not result:
+                print('Не удалось загрузить данные. Завершение работы.')
+                return []
+            return result
 
         elif users_answer == '2':
             print('Для обработки выбран CSV-файл')
             csv_path = input('Введите путь к CSV-файлу: ')
             csv_path = csv_path.strip('"\'')
-            res = read_csv(csv_path)
-            break
+            result = read_csv(csv_path)
+            if not result:
+                print('Не удалось загрузить данные. Завершение работы.')
+                return []
+            return result
 
         elif users_answer == '3':
             print('Для обработки выбран XLSX-файл')
             xlsx_path = input('Введите путь к XLSX-файлу: ')
             xlsx_path = xlsx_path.strip('"\'')
-            res = read_excel(xlsx_path)
-            break
+            result = read_excel(xlsx_path)
+            if not result:
+                print('Не удалось загрузить данные. Завершение работы.')
+                return []
+            return result
+
+        elif users_answer == '4':
+            print('Работа завершена')
+            return None
 
         else:
             print('Неверно выбран пункт меню. Выберите пункт из предложенных')
 
-    if not res:
-        print('Не удалось загрузить данные. Завершение работы.')
-        return []
 
+def main_filtered_status(data_transact):
+    """Функция предлагает выбрать тип фильтрации, отправляет данные целевой функции и получает ответ"""
     print()
-    print("""Введите статус, по которому необходимо выполнить фильтрацию. 
+    print("""Введите статус, по которому необходимо выполнить фильтрацию.
         Доступные для фильтровки статусы: EXECUTED, CANCELED, PENDING""")
     print()
 
     while True:
         try:
-            users_answer_2 = input('Ввод: ')
+            users_answer = input().strip().upper()
+            if users_answer in ['EXECUTED', 'CANCELED', 'PENDING']:
+                filtered_result = filter_by_state(data_transact, users_answer)
 
-            if users_answer_2.upper() == 'EXECUTED':
-                filtred_result = filter_by_state(res, 'EXECUTED')
-                print('Операции отфильтрованы по статусу EXECUTED')
-                break
+                if not filtered_result:
+                    print(f'Нет транзакций со статусом {users_answer}')
+                    print('Попробуйте другой статус')
+                    continue
+                print(f'Операции отфильтрованы по статусу {users_answer}')
+                return filtered_result
 
-            elif users_answer_2.upper() == 'CANCELED':
-                filtred_result = filter_by_state(res, 'CANCELED')
-                print('Операции отфильтрованы по статусу CANCELED')
-                break
-
-            elif users_answer_2.upper() == 'PENDING':
-                filtred_result = filter_by_state(res, 'PENDING')
-                print('Операции отфильтрованы по статусу PENDING')
-                break
+            elif users_answer.lower() == 'exit':
+                print('Завершение работы')
+                return []
 
             else:
-                print(f'Статус операции {users_answer_2} недоступен.')
+                print(f'Статус {users_answer} не найден')
 
         except Exception as ex:
             print(f'Ошибка {ex}. Попробуйте другой статус')
 
 
-
+def main_sorted_by_date(data_transact):
+    """Функция предлагает отсортировать транзакции по дате. Обращается к целевой функции"""
     print()
     print('Отсортировать операции по дате? Да/Нет')
     print()
 
     while True:
-        users_answer_3 = input()
-        if users_answer_3.lower() == 'да':
-            print('Отсортировать по возрастанию или по убыванию? (по возрастанию/по убыванию/не сортировать)')
-            users_answer_4 = input('Ввод: ')
+        users_answer = input()
+        if users_answer.strip().lower() == 'да':
+            while True:
+                print('Отсортировать по возрастанию или по убыванию? (по возрастанию/по убыванию/не сортировать)')
+                users_answer_2 = input('Ввод: ')
 
-            if users_answer_4.lower() == 'по возрастанию':
-                sorted_result = sort_by_date(filtred_result, False)
-                break
+                if users_answer_2.strip().lower() == 'по возрастанию':
+                    sorted_result = sort_by_date(data_transact, False)
+                    return sorted_result
 
-            elif users_answer_4.lower() == 'по убыванию':
-                sorted_result = sort_by_date(filtred_result, True)
-                break
+                elif users_answer_2.strip().lower() == 'по убыванию':
+                    sorted_result = sort_by_date(data_transact, True)
+                    return sorted_result
 
-            elif users_answer_4.lower() == 'не сортировать':
-                sorted_result = filtred_result
-                print('Отмена сортировки')
-                break
+                elif users_answer_2.strip().lower() == 'не сортировать':
+                    print('Отмена сортировки')
+                    return data_transact
 
-            else:
-                continue
+                else:
+                    print('Выберите один из вариантов')
+                    continue
 
-        elif users_answer_3.lower() == 'нет':
-            sorted_result = filtred_result
-            break
+        elif users_answer.strip().lower() == 'нет':
+            return data_transact
 
         else:
             print('Выберите один из вариантов')
 
 
-    print()
-    print('Выводить только рублевые транзакции? Да/Нет')
-    print()
-    while True:
-        users_answer_5 = input()
-        if users_answer_5.lower() == 'да':
-            currency_iterator = filter_by_currency(sorted_result, 'RUB')
-            currency_result = list(currency_iterator)
-            break
-        elif users_answer_5.lower() == 'нет':
-            currency_result = sorted_result
-            break
-        else:
-            print('Введите да/нет')
+def main_filtered_rub_transact(data_transact):
+    """Функция предлагает выводить только рублевые транзакции и обращается к целевой функции"""
 
+    try:
+        print()
+        print('Выводить только рублевые транзакции? Да/Нет')
+        print()
+        while True:
+            users_answer = input()
+            if users_answer.strip().lower() == 'да':
+                currency_iterator = filter_by_currency(data_transact, 'RUB')
+                currency_result = list(currency_iterator)
+
+                if not currency_result:
+                    print('Не удалось отфильтровать рублевые транзакции.')
+                    return data_transact
+
+                return currency_result
+
+            elif users_answer.strip().lower() == 'нет':
+                return data_transact
+            else:
+                print('Введите да/нет')
+    except Exception as ex:
+        print(f'Ошибка при фильтрации: {ex}')
+        print('Возвращаем исходные данные')
+        return data_transact
+
+
+def main_sorting_by_word(data_transact):
+    """Функция предлагает отфильтровать список транзакций по определенному слову в описании """
 
     print()
     print('Отфильтровать список транзакций по определенному слову в описании? Да/Нет')
     print()
+
     while True:
-        users_answer_6 = input()
-        if users_answer_6.lower() == 'да':
+        users_answer = input('Ввод ')
+        if users_answer.strip().lower() == 'да':
             print()
             print('Введите слово для фильтрации:')
             print()
-            users_answer_7 = input()
-            result_search = process_bank_search(currency_result, users_answer_7)
-            break
-        elif users_answer_6.lower() == 'нет':
-            result_search = currency_result
-            break
+            users_answer_2 = input('Ввод ')
+            result_search = process_bank_search(data_transact, users_answer_2)
+
+            if not result_search:
+                print('По данному слову транзакций не найдено')
+                print('Возвращаем исходный файл')
+                return data_transact
+
+            return result_search
+
+        elif users_answer.lower() == 'нет':
+            return data_transact
+
         else:
             print('Некорректный ввод. Введите да/нет')
 
+
+def main_result(data_transact):
+    if not data_transact:
+        print('Нет транзакций для отображения')
+        return None
+
     print('Распечатываю итоговый список транзакций...')
-    return result_search
+    print()
+    print("=" * 50)
+
+    for i, transaction in enumerate(data_transact, 1):
+        print(f"\n--- Транзакция {i} ---")
+
+        for key, value in transaction.items():
+            formatted_key = key.replace('_', ' ').title()
+            print(f"  {formatted_key}: {value}")
+    return data_transact
 
 
-print(main())
+def main():
+    data = main_start()
+    if not data:
+        return []
 
+    data = main_filtered_status(data)
+    data = main_sorted_by_date(data)
+    data = main_filtered_rub_transact(data)
+    data = main_sorting_by_word(data)
+    data = main_result(data)
 
-
-
-
-
-
-
-
-
-#
-# PENDING"D:\SkyPro_files\transactions_excel.xlsx"
-#
-# {'id': 632926.0,
-#  'state': 'PENDING',
-#  'date': '2021-11-27T00:46:09Z',
-#  'amount': 29553.0,
-#  'currency_name': 'Yuan Renminbi',
-#  'currency_code': 'CNY',
-#  'from': 'American Express 6477627838877562',
-#  'to': 'Счет 88381741644903346269',
-#  'description': 'Перевод организации'}
-
-
-
-
-
-
-
-
-
-
-
-
-
+    return data
