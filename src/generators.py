@@ -2,7 +2,16 @@ def filter_by_currency(list_of_dict, key):
     """Функция принимает на вход список словарей и ключ. Функция возвращает итератор,
     который поочередно выдает транзакции, где валюта операции соответствует коду,
      указанному в ключе (например, USD)."""
-    return (x for x in list_of_dict if x["operationAmount"]["currency"]["code"] == key)
+    for transaction in list_of_dict:
+        try:
+            if transaction["operationAmount"]["currency"]["code"] == key:
+                yield transaction
+        except (KeyError, TypeError):
+            try:
+                if transaction['currency_code'] == key:
+                    yield transaction
+            except (KeyError, TypeError):
+                continue
 
 
 def transaction_descriptions(list_of_dict):

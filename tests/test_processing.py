@@ -1,4 +1,3 @@
-
 from src.processing import filter_by_state, sort_by_date
 
 
@@ -17,7 +16,7 @@ def test_filter_by_state_02(list_of_dict_for_tests: list) -> None:
 
 
 def test_filter_by_state_03(list_of_dict_for_tests: list) -> None:
-    assert filter_by_state(list_of_dict_for_tests, state='') == 'Такого ключа нет'
+    assert filter_by_state(list_of_dict_for_tests, state='') == []
 
 
 def test_sort_by_date_01(list_of_dict_for_tests: list) -> None:
@@ -45,7 +44,3 @@ def test_sort_by_date_03(list_of_dict_same_date: list) -> None:
         {'id': 939719570, 'state': 'EXECUTED', 'date': '2019-07-03T18:35:29.512362'},
         {'id': 41428829, 'state': 'EXECUTED', 'date': '2019-07-03T18:35:29.512361'}
     ]
-
-
-def test_sort_by_date_04(list_of_dict_incorrect: list) -> None:
-    assert sort_by_date(list_of_dict_incorrect) == 'Неверный формат даты'

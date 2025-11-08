@@ -1,4 +1,4 @@
-from unittest.mock import MagicMock, patch
+from unittest.mock import mock_open, MagicMock, patch
 
 from src.reading_tables import read_csv, read_excel
 
@@ -11,10 +11,12 @@ def test_read_csv():
         {'state': 'CANCELED', 'amount': 300, 'currency': 'USD'}
     ]
 
-    with patch('csv.DictReader') as mock_reader:
-        mock_reader.return_value = mock_transactions
-        result = read_csv('test_csv')
-        assert result == mock_transactions
+    with patch('builtins.open', mock_open()) as mock_file:
+        with patch('csv.DictReader') as mock_reader:
+            mock_reader.return_value = mock_transactions
+
+            result = read_csv('test_csv')
+            assert result == mock_transactions
 
 
 def test_read_excel():
